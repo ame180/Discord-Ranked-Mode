@@ -10,7 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlayerRepository::class)]
 #[ORM\Table(name: 'players')]
-#[ORM\Index(fields: ['externalId'], name: 'external_id_idx')]
+#[ORM\UniqueConstraint(name: 'external_id_uniq', fields: ['externalId'])]
+#[ORM\UniqueConstraint(name: 'username_uniq', fields: ['username'])]
 class Player implements \JsonSerializable
 {
     #[ORM\Id]
@@ -18,7 +19,7 @@ class Player implements \JsonSerializable
     #[ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ORM\Column(name: 'username', type: 'string')]
+    #[ORM\Column(name: 'username', type: 'string', unique: true)]
     private string $username;
 
     #[ORM\Column(name: 'external_id', type: 'string', unique: true)]
