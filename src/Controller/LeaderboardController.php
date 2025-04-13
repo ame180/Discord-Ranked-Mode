@@ -87,14 +87,15 @@ final class LeaderboardController extends AbstractController
      * @throws MissingMappingDriverImplementation
      * @throws Exception
      */
-    #[Route('{guildIdentifier}/player/{playerId}', name: 'player', requirements: ['guildIdentifier' => '[a-zA-Z0-9\-_\.]+', 'playerId' => '\d+'])]
-    public function player(string $guildIdentifier, string $playerId): Response
+    #[Route('{guildIdentifier}/player/{playerIdentifier}', name: 'player', requirements: ['guildIdentifier' => '[a-zA-Z0-9\-_\.]+', 'playerIdentifier' => '[a-zA-Z0-9\-_\.]+'])]
+    public function player(string $guildIdentifier, string $playerIdentifier): Response
     {
         $guild = $this->entityManager->getRepository(Entity\Guild::class)->findOneBy(['externalId' => $guildIdentifier])
             ?? $this->entityManager->getRepository(Entity\Guild::class)->findOneBy(['slug' => $guildIdentifier]);
 
         /** @var Entity\Player $player */
-        $player = $this->playerRepository->findOneBy(['externalId' => $playerId]);
+        $player = $this->playerRepository->findOneBy(['externalId' => $playerIdentifier])
+            ?? $this->playerRepository->findOneBy(['username' => $playerIdentifier]);
 
         if (!$guild || !$player) {
             throw new NotFoundHttpException();

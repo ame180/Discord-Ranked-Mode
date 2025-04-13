@@ -41,7 +41,7 @@
                     <td colspan="1" class="align-middle">{{ index }}</td>
                     <td colspan="3" class="text-truncate">
                         <a
-                                href="{{ router.generate('player', {'guildIdentifier': request.get('guildIdentifier'), 'playerId': player.externalId}) }}"
+                                href="{{ router.generate('player', {'guildIdentifier': request.get('guildIdentifier'), 'playerIdentifier': player.username}) }}"
                                 class="text-reset text-decoration-none"
                         >
                             <img
