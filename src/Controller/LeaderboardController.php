@@ -114,9 +114,12 @@ final class LeaderboardController extends AbstractController
         }
 
         $xpData = [];
+        $messageData = [];
         $chartDay = Carbon::now()->subDays($daysOnChart);
         $previousSnapshot = $snapshotDays[$chartDay->copy()->subDay()->format('Y-m-d')] ?? null;
         $previousXp = $previousSnapshot?->getXp();
+        $previousMessageCount = $previousSnapshot?->getMessageCount();
+
         while ($chartDay->isBefore(Carbon::now()->subDay())) {
             $snapshot = $snapshotDays[$chartDay->format('Y-m-d')] ?? null;
             if (null === $snapshot) {
@@ -124,6 +127,12 @@ final class LeaderboardController extends AbstractController
                     'date' => $chartDay->format('Y-m-d'),
                     'xp' => null,
                 ];
+
+                $messageData[] = [
+                    'date' => $chartDay->format('Y-m-d'),
+                    'messages' => null,
+                ];
+
                 $chartDay->addDay();
 
                 continue;
@@ -135,12 +144,22 @@ final class LeaderboardController extends AbstractController
             ];
             $previousXp = $snapshot->getXp();
 
+            // Add message count data
+            $messageData[] = [
+                'date' => $snapshot->getCreatedAt()->format('Y-m-d'),
+                'messages' => null !== $previousMessageCount && null !== $snapshot->getMessageCount()
+                    ? $snapshot->getMessageCount() - $previousMessageCount
+                    : null,
+            ];
+            $previousMessageCount = $snapshot->getMessageCount();
+
             $chartDay->addDay();
         }
 
         return $this->render('player.html.twig', [
             'player' => $player,
             'xpData' => $xpData,
+            'messageData' => $messageData,
         ]);
     }
 }
