@@ -1,16 +1,16 @@
 <nav class="navbar navbar-expand-lg sticky-top" data-bs-theme="dark" style="background-color: #7864ff">
     <div class="container-fluid px-4">
-        <a class="navbar-brand" href="{{ router.generate('leaderboard', {'guildId': request.get('guildId')}) }}">Discord Ranked Mode</a>
+        <a class="navbar-brand" href="{{ router.generate('leaderboard', {'guildIdentifier': request.get('guildIdentifier')}) }}">Discord Ranked Mode</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ router.generate('leaderboard', {'guildId': request.get('guildId')}) }}">Leaderboard</a>
+                    <a class="nav-link" href="{{ router.generate('leaderboard', {'guildIdentifier': request.get('guildIdentifier')}) }}">Leaderboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ router.generate('ranks', {'guildId': request.get('guildId')}) }}">Ranks</a>
+                    <a class="nav-link" href="{{ router.generate('ranks', {'guildIdentifier': request.get('guildIdentifier')}) }}">Ranks</a>
                 </li>
             </ul>
         </div>

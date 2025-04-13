@@ -26,12 +26,13 @@ final class LeaderboardController extends AbstractController
     /**
      * @throws \Exception
      */
-    #[Route('/{guildId}', name: 'home', requirements: ['guildId' => '\d+'])]
-    #[Route('{guildId}/leaderboard', name: 'leaderboard', requirements: ['guildId' => '\d+'])]
-    public function leaderboard(string $guildId): Response
+    #[Route('/{guildIdentifier}', name: 'home', requirements: ['guildIdentifier' => '[a-zA-Z0-9\-_\.]+'])]
+    #[Route('{guildIdentifier}/leaderboard', name: 'leaderboard', requirements: ['guildIdentifier' => '[a-zA-Z0-9\-_\.]+'])]
+    public function leaderboard(string $guildIdentifier): Response
     {
         /** @var Entity\Guild $guild */
-        $guild = $this->entityManager->getRepository(Entity\Guild::class)->findOneBy(['externalId' => $guildId]);
+        $guild = $this->entityManager->getRepository(Entity\Guild::class)->findOneBy(['externalId' => $guildIdentifier])
+            ?? $this->entityManager->getRepository(Entity\Guild::class)->findOneBy(['slug' => $guildIdentifier]);
 
         if (!$guild || !$guild->getLeaderboardProvider()) {
             throw new NotFoundHttpException();
@@ -58,10 +59,11 @@ final class LeaderboardController extends AbstractController
         ]);
     }
 
-    #[Route('{guildId}/ranks', name: 'ranks', requirements: ['guildId' => '\d+'])]
-    public function ranks(string $guildId): Response
+    #[Route('{guildIdentifier}/ranks', name: 'ranks', requirements: ['guildIdentifier' => '[a-zA-Z0-9\-_\.]+'])]
+    public function ranks(string $guildIdentifier): Response
     {
-        $guild = $this->entityManager->getRepository(Entity\Guild::class)->findOneBy(['externalId' => $guildId]);
+        $guild = $this->entityManager->getRepository(Entity\Guild::class)->findOneBy(['externalId' => $guildIdentifier])
+            ?? $this->entityManager->getRepository(Entity\Guild::class)->findOneBy(['slug' => $guildIdentifier]);
 
         if (!$guild) {
             throw new NotFoundHttpException();
@@ -85,10 +87,11 @@ final class LeaderboardController extends AbstractController
      * @throws MissingMappingDriverImplementation
      * @throws Exception
      */
-    #[Route('{guildId}/player/{playerId}', name: 'player', requirements: ['guildId' => '\d+', 'playerId' => '\d+'])]
-    public function player(string $guildId, string $playerId): Response
+    #[Route('{guildIdentifier}/player/{playerId}', name: 'player', requirements: ['guildIdentifier' => '[a-zA-Z0-9\-_\.]+', 'playerId' => '\d+'])]
+    public function player(string $guildIdentifier, string $playerId): Response
     {
-        $guild = $this->entityManager->getRepository(Entity\Guild::class)->findOneBy(['externalId' => $guildId]);
+        $guild = $this->entityManager->getRepository(Entity\Guild::class)->findOneBy(['externalId' => $guildIdentifier])
+            ?? $this->entityManager->getRepository(Entity\Guild::class)->findOneBy(['slug' => $guildIdentifier]);
 
         /** @var Entity\Player $player */
         $player = $this->playerRepository->findOneBy(['externalId' => $playerId]);
