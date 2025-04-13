@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity()]
 #[ORM\Table(name: 'guilds')]
 #[ORM\UniqueConstraint(name: 'external_id_uniq', fields: ['externalId'])]
+#[ORM\UniqueConstraint(name: 'slug_uniq', fields: ['slug'])]
 class Guild
 {
     #[ORM\Id]
@@ -28,6 +29,9 @@ class Guild
 
     #[ORM\Column(name: 'leaderboard_provider_auth_token', type: 'string', nullable: true)]
     private ?string $leaderboardProviderAuthToken;
+
+    #[ORM\Column(name: 'slug', type: 'string', unique: true)]
+    private string $slug;
 
     public function getId(): ?int
     {
@@ -90,6 +94,18 @@ class Guild
     public function setLeaderboardProviderAuthToken(?string $leaderboardProviderAuthToken): static
     {
         $this->leaderboardProviderAuthToken = $leaderboardProviderAuthToken;
+
+        return $this;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }
